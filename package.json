@@ -1,0 +1,24 @@
+{
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "tracker",
+  "main": "index.js",
+  "dependencies": {
+    "init": "^0.1.2",
+    "inquirer": "^8.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mharizanova8703/EMployee-TrackeR.git"
+  },
+  "author": "Mariya Harizanova",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mharizanova8703/EMployee-TrackeR/issues"
+  },
+  "homepage": "https://github.com/mharizanova8703/EMployee-TrackeR#readme"
+}
