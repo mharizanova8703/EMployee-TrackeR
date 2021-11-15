@@ -1,23 +1,17 @@
-const connection = require("./connection")
+const connection = require('./connection')
 
 class DB {
+  constructor(connection) {
+    this.connection = connection
+  }
 
-    constructor(connection){
-        this.connection = connection;
-    }
+  getAllEmployees() {
+    return this.connection.promise().query('SELECT * from employees;')
+  }
 
-    getAllEmployees(){
-        return this.connection.promise().query(
-            "SELECT * from employee;"
-        )
-    }
-
-
-
-
-
-
-
+  getAllRoles() {
+    return this.connection.promise().query('SELECT * from roles;')
+  }
 }
 
-module.exports = new DB(connection);
+module.exports = new DB(connection)

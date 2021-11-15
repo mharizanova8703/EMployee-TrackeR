@@ -27,13 +27,33 @@ function showList() {
       let userChoice = response.option
       console.log('userChoice', userChoice)
       switch (userChoice) {
-        case 'View employees':
-          showEmployee()
+        case 'Add department':
+          addDepartment()
           break
+        case 'Add role':
+          addRole()
+          break
+        case 'Add employee':
+          addEmployee()
+          break
+        case 'View departments':
+          showDepartments()
+          break
+        case 'View roles':
+          showRoles()
+          break
+        case 'View employees':
+          showEmployees()
+          break
+        case 'Update employee role':
+          updateEmployee()
+          break
+        default:
+          end()
       }
     })
 }
-function showDepartment() {
+function showDepartments() {
   inquirer
     .prompt({
       type: 'input',
@@ -42,7 +62,7 @@ function showDepartment() {
     })
     .then(function (answer) {
       connection.query(
-        'INSERT INTO department (name) VALUES (?)',
+        'INSERT INTO departments (name) VALUES (?)',
         [answer.deptName],
         function (err, res) {
           if (err) throw err
@@ -87,13 +107,22 @@ function addRole() {}
 // showList();
 
 //   });
-//     });
-
+//     })
+function addDepartment() {}
+function addEmployee() {}
+function addRole() {}
 function updateEmployee() {}
-function showDepartment() {}
-function showRoles() {}
+function showDepartments() {}
+function showRoles() {
+  db.getAllRoles()
+    .then(([rows]) => {
+      let roles = rows
+      console.table(roles)
+    })
+    .then(() => showList())
+}
 
-function showEmployee() {
+function showEmployees() {
   db.getAllEmployees()
     .then(([rows]) => {
       let employees = rows
