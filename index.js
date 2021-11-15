@@ -112,7 +112,16 @@ function addDepartment() {}
 function addEmployee() {}
 function addRole() {}
 function updateEmployee() {}
-function showDepartments() {}
+
+function showDepartments() {
+  db.getAllDepartments()
+    .then(([rows]) => {
+      let departments = rows
+      console.table(departments)
+    })
+    .then(() => showList())
+}
+
 function showRoles() {
   db.getAllRoles()
     .then(([rows]) => {
