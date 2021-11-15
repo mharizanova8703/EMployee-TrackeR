@@ -67,6 +67,7 @@ SO THAT I can organize and plan my business
 
 <img width="738" alt="Screen Shot 2021-11-15 at 5 15 33 PM" src="https://user-images.githubusercontent.com/85656320/141862569-491800b8-1f0a-42ea-94f6-b18893342fec.png">
   
+<img width="563" alt="Screen Shot 2021-11-15 at 5 24 24 PM" src="https://user-images.githubusercontent.com/85656320/141862829-fc19ab3f-d444-40fa-86ff-93fb1e5a0202.png">
  
 
    
