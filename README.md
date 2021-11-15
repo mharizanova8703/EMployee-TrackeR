@@ -60,6 +60,11 @@ SO THAT I can organize and plan my business
   
 
    ## Screenshot
+   
+   
+   
+   <img width="602" alt="Screen Shot 2021-11-15 at 2 20 08 PM" src="https://user-images.githubusercontent.com/85656320/141841199-ad93eee9-f031-4f7d-9305-e7648cdee06f.png">
+
   
  
 
