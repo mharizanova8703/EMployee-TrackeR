@@ -1,37 +1,37 @@
 INSERT INTO department (name)
 VALUES ("Cardiology "),
-       (" Neurology"),
+       ("Neurology"),
        ("Radiology"),
        ("Pathology"),
-       ("Nursing");
-       ("Pharmacy");
-       ("Administratio8"),
+       ("Nursing"),
+       ("Pharmacy"),
+       ("Administratior");
 
 INSERT INTO role (title, salary, department_id)
-VALUES ("Cardiologist", 90000, 2),
-       ("Neurologist", 90000, 3),
-        ("Radiologist", 52000, 4),
-       ("Pathologist", 65000, 5),
-       ("Pharmacist", 410000, 7),
-       ("Home Care Registered Nurse", 35000, 6),
-       ("Surgical Assistant Registered Nurse", 40000, 6);
-         ("Emergency Room Registered Nurse.", 35000, 6)
-          ("HR", 90000, 8),
+VALUES ("Cardiologist", 90000, 1),
+       ("Neurologist", 90000, 2),
+        ("Radiologist", 52000, 3),
+       ("Pathologist", 65000, 4),
+       ("Pharmacist", 410000, 6),
+       ("Home Care Registered Nurse", 35000, 5),
+       ("Surgical Registered Nurse", 40000, 5),
+         ("Emergency Room Nurse", 35000, 5),
+          ("HR", 90000, 7),
            ("Administrator", 35000, 7),
-             ("Manager", 50000, 8),
+             ("Manager", 50000, 7);
 
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Mariya", "Engleman", 1, 0),
-       ("Michael", "Thurmond", 2, 1),
-       ("Josh", "White", 5, 1),
-       ("Jacob", "Stone", 1, 0),
-       ("Keit", "Markus", 7, 4),
-       ("Ramy", "Nixon", 4, 1),
-       ("Logan", "Relly", 8, 1);
-         ("Michelle", "Pucket", 5, 1),
-       ("Morgan", "Ivanova", 1, 0),
-       ("Stacy", "Boley", 7, 4),
-       ("Nivishi", "Edwards", 4, 1),
-       ("Myrtia", "Hall", 8, 1);
+INSERT INTO employee (first_name, last_name, role_id)
+VALUES ("Mariya", "Engleman", 1),
+       ("Michael", "Thurmond", 2),
+       ("Josh", "White", 3),
+       ("Jacob", "Stone", 4),
+       ("Keit", "Markus", 5),
+       ("Ramy", "Nixon", 6),
+       ("Logan", "Relly", 7),
+        ("Michelle", "Pucket", 8),
+       ("Morgan", "Ivanova", 9),
+       ("Stacy", "Boley", 10),
+       ("Nivishi", "Edwards", 11),
+       ("Myrtia", "Hall", 5);
 
 
