@@ -1,7 +1,7 @@
 //Dependencies
 const inquirer = require('inquirer')
-const mysql = require('mysql2')
-
+const connection = require('./connection')
+const cTable = require('console.table')
 const db = require('./db')
 
 showList()
@@ -69,20 +69,20 @@ function addEmployee() {
     {
       type: 'input',
       message: "What's the first name of the employee?",
-      name: 'eeFirstName',
+      name: 'FirstName',
     },
     {
       type: 'input',
       message: "What's the last name of the employee?",
-      name: 'eeLastName',
+      name: 'LastName',
     },
     {
-      type: 'input',
+      type: '',
       message: "What is the employee's role id number?",
       name: 'roleID',
     },
     {
-      type: 'input',
+      type: 'list',
       message: 'What is the manager id number?',
       name: 'managerID',
     },
@@ -108,9 +108,7 @@ function addRole() {
   ])
 }
 
-function updateEmployee() {
-  
-}
+function updateEmployee() {}
 
 function showDepartments() {
   db.getAllDepartments()
