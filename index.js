@@ -2,7 +2,8 @@
 const inquirer = require('inquirer')
 const connection = require('./connection')
 const cTable = require('console.table')
-const db = require('./db')
+
+
 
 showList()
 
@@ -57,11 +58,23 @@ function showList() {
 //   });
 //     })
 function addDepartment() {
-  inquirer.prompt({
-    type: 'input',
-    message: 'What is the name of the department?',
-    name: 'deptName',
-  })
+  inquirer
+    .prompt({
+      type: 'input',
+      message: 'What is the name of the department?',
+      name: 'deptName',
+    })
+    .then(function (answer) {
+      connection.query(
+        'INSERT INTO departments (name) VALUES (?)',
+        [answer.deptName],
+        function (err, rows) {
+          if (err) throw err
+          console.table(rows)
+          showList()
+        },
+      )
+    })
 }
 
 function addEmployee() {
@@ -89,52 +102,61 @@ function addEmployee() {
   ])
 }
 function addRole() {
-  inquirer.prompt([
-    {
-      type: 'input',
-      message: "What's the name of the role?",
-      name: 'roleName',
-    },
-    {
-      type: 'input',
-      message: 'What is the salary for this role?',
-      name: 'salaryTotal',
-    },
-    {
-      type: 'input',
-      message: 'What is the department id number?',
-      name: 'deptID',
-    },
-  ])
+  inquirer
+    .prompt([
+      {
+        type: 'input',
+        message: "What's the name of the role?",
+        name: 'roleName',
+      },
+      {
+        type: 'input',
+        message: 'What is the salary for this role?',
+        name: 'salaryTotal',
+      },
+    ])
+    .then(function (answer) {
+      connection.query(
+        'INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)',
+        [answer.roleName, answer.salaryTotal, answer.deptID],
+        function (err, res) {
+          if (err) throw err
+          console.table(res)
+          showList()
+        },
+      )
+    })
 }
 
 function updateEmployee() {}
-
 function showDepartments() {
-  db.getAllDepartments()
-    .then(([rows]) => {
-      let departments = rows
-      console.table(departments)
-    })
-    .then(() => showList())
+  // select from the db
+  let query = 'SELECT * FROM departments'
+  connection.query(query, function (err, rows) {
+    if (err) throw err
+    console.table(rows)
+    showList()
+  })
 }
-
 function showRoles() {
-  db.getAllRoles()
-    .then(([rows]) => {
-      let roles = rows
-      console.table(roles)
-    })
-    .then(() => showList())
+  // select from the db
+  let query = 'SELECT * FROM roles'
+  connection.query(query, function (err, res) {
+    if (err) throw err
+    console.table(res)
+    showList()
+  })
+  // show the result to the user (console.table)
 }
 
 function showEmployees() {
-  db.getAllEmployees()
-    .then(([rows]) => {
-      let employees = rows
-      console.table(employees)
-    })
-    .then(() => showList())
+  // select from the db
+  let query = 'SELECT * FROM employees'
+  connection.query(query, function (err, res) {
+    if (err) throw err
+    console.table(res)
+    showList()
+  })
 }
 
 function end() {
