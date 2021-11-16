@@ -12,7 +12,7 @@ class DB {
   getAllRoles() {
     return this.connection.promise().query('SELECT * from roles;')
   }
-   getAllDepartments() {
+  getAllDepartments() {
     return this.connection.promise().query('SELECT * from departments;')
   }
 }
