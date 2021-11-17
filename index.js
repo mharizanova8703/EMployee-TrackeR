@@ -209,28 +209,38 @@ function addRole() {
       },
     ])
     .then(function (answers) {
-      //var roleName = answers.roleName
-      var salary = answers.salary
-      var title = answers.title
-      var department_id = answers.department_id
-      //console.log(salary)// console.log(depID)
-
-      // connection.query(
-      //`SELECT id FROM department_id WHERE department_id = "${answers.department_id}"`,
-      // (err, department_id) => {
-      //  const id = department_id[0].id
-
-      connection.query(
-        `INSERT INTO role (title, salary, department_id') VALUES ("${title}", "${salary}", "${department_id}")`,
-        function (err, res) {
-          if (err) throw err
-          console.table(res)
-
-          showList()
-        },
-      )
+      const title = answers.title
+      const salary = answers.salary
+      const department_id = answers.department_id
+      const query = `INSERT INTO roles (title, salary, department_id) VALUES ("${title}", "${salary}", "${department_id}")`
+      connection.query(query, function (err, res) {
+        if (err) {
+          throw err
+        }
+        console.table(res)
+        showList()
+      })
     })
 }
+
+//var roleName = answers.roleName
+//var salary = answers.salary
+//var title = answers.title
+// var department_id = answers.department_id
+//console.log(salary)// console.log(depID)
+
+// connection.query(
+//`SELECT id FROM department_id WHERE department_id = "${answers.department_id}"`,
+// (err, department_id) => {
+//  const id = department_id[0].id
+
+//connection.query(
+// `INSERT INTO role (title, salary, department_id') VALUES ("${title}", "${salary}", "${department_id}")`,
+// function (err, res) {
+//  if (err) throw err
+// console.table(res)
+
+// showList()
 
 function updateEmployee() {
   inquirer.prompt([
