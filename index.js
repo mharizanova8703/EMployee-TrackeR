@@ -2,6 +2,7 @@
 const inquirer = require('inquirer')
 const connection = require('./connection')
 const cTable = require('console.table')
+
 //const db = require(".");
 showList()
 
@@ -24,6 +25,7 @@ function showList() {
     })
     .then((response) => {
       let userChoice = response.option
+      console.log(userChoice)
       console.log('You entered:' + response.option)
 
       switch (userChoice) {
@@ -35,6 +37,7 @@ function showList() {
           break
         case 'View employees':
           showEmployees()
+
           break
         case 'Add department':
           addDepartment()
@@ -93,7 +96,8 @@ function addDepartment() {
       var department_name = answer.deptName
 
       console.log(
-        `\nSuccessfully added ${department_name} into department table!\n`,
+        `\n
+         ${department_name} into department table!\n`,
       )
 
       connection.query(
@@ -176,7 +180,7 @@ function addEmployee() {
     })
 }
 
-//let department_id = []
+let department_id = []
 
 function addRole() {
   connection.query(`SELECT title FROM roles`, (err, titles) => {
@@ -205,24 +209,23 @@ function addRole() {
       },
     ])
     .then(function (answers) {
-      var title = answers.title
+      //var roleName = answers.roleName
       var salary = answers.salary
-      var department_id = answers.deptName
-      console.log(salary)
-      console.log(deptName)
+      var title = answers.title
+      var department_id = answers.department_id
+      //console.log(salary)// console.log(depID)
+
+      // connection.query(
+      //`SELECT id FROM department_id WHERE department_id = "${answers.department_id}"`,
+      // (err, department_id) => {
+      //  const id = department_id[0].id
 
       connection.query(
-        `SELECT id FROM department_id WHERE department_id = "${answers.deptName}"`,
-        (err, deptName) => {
-          const id = deptName[0].id
-        },
-      )
-
-      connection.query(
-        `INSERT INTO roles (title, salary, department_id) VALUES ("${title}", "${department_id}", "${salary}",)`,
-        (err, deptName) => {
+        `INSERT INTO role (title, salary, department_id') VALUES ("${title}", "${salary}", "${department_id}")`,
+        function (err, res) {
           if (err) throw err
-          console.table(rows)
+          console.table(res)
+
           showList()
         },
       )
