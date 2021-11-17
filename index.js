@@ -2,7 +2,7 @@
 const inquirer = require('inquirer')
 const connection = require('./connection')
 const cTable = require('console.table')
-
+//const db = require(".");
 showList()
 
 function showList() {
@@ -10,12 +10,12 @@ function showList() {
     .prompt({
       type: 'list',
       choices: [
-        'Add department',
-        'Add role',
-        'Add employee',
         'View departments',
         'View roles',
         'View employees',
+        'Add department',
+        'Add role',
+        'Add employee',
         'Update employee role',
         'Quit',
       ],
@@ -24,17 +24,9 @@ function showList() {
     })
     .then((response) => {
       let userChoice = response.option
-      console.log('userChoice', userChoice)
+      console.log('You entered:' + response.option)
+
       switch (userChoice) {
-        case 'Add department':
-          addDepartment()
-          break
-        case 'Add role':
-          addRole()
-          break
-        case 'Add employee':
-          addEmployee()
-          break
         case 'View departments':
           showDepartments()
           break
@@ -44,6 +36,15 @@ function showList() {
         case 'View employees':
           showEmployees()
           break
+        case 'Add department':
+          addDepartment()
+          break
+        case 'Add role':
+          addRole()
+          break
+        case 'Add employee':
+          addEmployee()
+          break
         case 'Update employee role':
           updateEmployee()
           break
@@ -52,8 +53,33 @@ function showList() {
       }
     })
 }
+function showDepartments() {
+  let query = 'SELECT * FROM departments'
+  connection.query(query, function (err, rows) {
+    if (err) throw err
+    console.table(rows)
+    showList()
+  })
+}
+function showRoles() {
+  let query = 'SELECT * FROM roles'
+  connection.query(query, function (err, rows) {
+    if (err) throw err
+    console.table(rows)
+    showList()
+  })
+}
 
-// Function to add a new department
+function showEmployees() {
+  // select from the db
+  let query = 'SELECT * FROM employees'
+  connection.query(query, function (err, res) {
+    if (err) throw err
+    console.table(res)
+    showList()
+  })
+}
+
 function addDepartment() {
   inquirer
     .prompt([
@@ -73,15 +99,18 @@ function addDepartment() {
       connection.query(
         `INSERT INTO departments (department_name) VALUES ("${department_name}")`,
       ),
-        (err, rows) => {
+        (err, res) => {
           if (err) throw err
+          console.table(res)
+
+          showDepartments()
         }
-      showDepartments()
     })
 }
 
 let roleOptions = []
 let managerOptions = []
+
 function addEmployee() {
   connection.query(`SELECT title FROM roles`, (err, titles) => {
     if (err) throw err
@@ -146,25 +175,52 @@ function addEmployee() {
       )
     })
 }
+
+//let department_id = []
+
 function addRole() {
+  connection.query(`SELECT title FROM roles`, (err, titles) => {
+    if (err) throw err
+    console.log(titles)
+    roleOptions = titles[0].title
+    console.log(roleOptions)
+  })
+
   inquirer
     .prompt([
       {
         type: 'input',
-        message: "What's the name of the role?",
-        name: 'roleName',
+        message: "What's the name of the employee role?",
+        name: 'title',
       },
       {
         type: 'input',
         message: 'What is the salary for this role?',
-        name: 'salaryTotal',
+        name: 'salary',
+      },
+      {
+        type: 'input',
+        message: 'What is the department ID?',
+        name: 'department_id',
       },
     ])
-    .then(function (answer) {
+    .then(function (answers) {
+      var title = answers.title
+      var salary = answers.salary
+      var department_id = answers.deptName
+      console.log(salary)
+      console.log(deptName)
+
       connection.query(
-        'INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)',
-        [answer.roleName, answer.salaryTotal, answer.deptID],
-        function (err, rows) {
+        `SELECT id FROM department_id WHERE department_id = "${answers.deptName}"`,
+        (err, deptName) => {
+          const id = deptName[0].id
+        },
+      )
+
+      connection.query(
+        `INSERT INTO roles (title, salary, department_id) VALUES ("${title}", "${department_id}", "${salary}",)`,
+        (err, deptName) => {
           if (err) throw err
           console.table(rows)
           showList()
@@ -173,38 +229,22 @@ function addRole() {
     })
 }
 
-function updateEmployee() {}
-
-function showDepartments() {
-  // select from the db
-  let query = 'SELECT * FROM departments'
-  connection.query(query, function (err, rows) {
-    if (err) throw err
-    console.table(rows)
-    showList()
-  })
+function updateEmployee() {
+  inquirer.prompt([
+    {
+      type: 'list',
+      message: 'For which employee would you like to update the role?',
+      name: 'role_id',
+    },
+    {
+      type: 'list',
+      message: "What is the employee's new role?",
+      name: 'titleID',
+      choices: showroles,
+    },
+  ])
 }
-function showRoles() {
-  // select from the db
-  let query = 'SELECT * FROM roles'
-  connection.query(query, function (err, res) {
-    if (err) throw err
-    console.table(res)
-    showList()
-  })
-  // show the result to the user (console.table)
-}
-
-function showEmployees() {
-  // select from the db
-  let query = 'SELECT * FROM employees'
-  connection.query(query, function (err, res) {
-    if (err) throw err
-    console.table(res)
-    showList()
-  })
-}
-
+// console.l
 function end() {
   connection.end()
   process.exit()
