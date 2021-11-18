@@ -3,7 +3,7 @@ const inquirer = require('inquirer')
 const connection = require('./connection')
 const cTable = require('console.table')
 
-//const db = require(".");
+//const db = require('./db')
 showList()
 
 function showList() {
@@ -74,7 +74,6 @@ function showRoles() {
 }
 
 function showEmployees() {
-  // select from the db
   let query = 'SELECT * FROM employees'
   connection.query(query, function (err, res) {
     if (err) throw err
@@ -142,34 +141,34 @@ function addEmployee() {
         name: 'LastName',
       },
       {
-        type: 'list',
+        type: 'input',
         message: 'What is the employees role?',
-        choices: roleOptions,
+        //choices: roleOptions,
         name: 'title',
       },
 
-      {
-        type: 'list',
-        message: 'Who is the employees manager?',
-        choices: managerOptions,
-        name: 'manager',
-      },
+      //{
+      // type: 'list',
+      //message: 'Who is the employees manager?',
+      //choices: managerOptions,
+      //name: 'manager',
+      // },
     ])
     .then(function (answers) {
       var firstName = answers.FirstName
       var lastName = answers.LastName
-      var jobTitle = answers.title
+      var Title = answers.title
       var manager = answers.manager
 
       connection.query(
         `SELECT id FROM roles WHERE title = "${answers.title}"`,
-        (err, jobTitle) => {
-          const id = jobTitle[0].id
+        (err, Title) => {
+          const id = Title[0].id
         },
       )
 
       connection.query(
-        `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ("${firstName}", "${lastName}", "${jobTitle}", "${manager}")`,
+        `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ("${firstName}", "${lastName}", "${Title}", "${manager}")`,
 
         function (err, rows) {
           if (err) throw err
@@ -212,7 +211,7 @@ function addRole() {
       const title = answers.title
       const salary = answers.salary
       const department_id = answers.department_id
-      const query = `INSERT INTO roles (title, salary, department_id) VALUES ("${title}", "${salary}", "${department_id}")`
+      const query = `INSERT INTO roles SET ("title", "salary", "department_id") VALUES ("${title}", "${salary}", "${department_id}");`
       connection.query(query, function (err, res) {
         if (err) {
           throw err
