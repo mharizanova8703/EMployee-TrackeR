@@ -1,5 +1,5 @@
 INSERT INTO departments (department_name)
-VALUES ("Cardiology "),
+VALUES ("Cardiology"),
        ("Neurology"),
        ("Radiology"),
        ("Pathology"),

@@ -88,11 +88,11 @@ function addDepartment() {
       {
         type: 'input',
         message: 'What is the name of the department?',
-        name: 'deptName',
+        name: 'department_name',
       },
     ])
     .then((answer) => {
-      var department_name = answer.deptName
+      var department_name = answer.department_name
 
       console.log(
         `\n
@@ -115,19 +115,6 @@ let roleOptions = []
 let managerOptions = []
 
 function addEmployee() {
-  connection.query(`SELECT title FROM roles`, (err, titles) => {
-    if (err) throw err
-    console.log(titles)
-    roleOptions = titles[0].title
-    console.log(roleOptions)
-  })
-  connection.query(`SELECT first_name FROM employees`, (err, manager) => {
-    if (err) throw err
-    console.log(manager)
-    managerOptions = manager[0].first_name
-    console.log(managerOptions)
-  })
-
   inquirer
     .prompt([
       {
@@ -143,43 +130,71 @@ function addEmployee() {
       {
         type: 'input',
         message: 'What is the employees role?',
-        //choices: roleOptions,
+
         name: 'title',
       },
 
-      //{
-      // type: 'list',
-      //message: 'Who is the employees manager?',
-      //choices: managerOptions,
-      //name: 'manager',
-      // },
+      {
+        type: 'list',
+        message: 'Who is the employees manager?',
+        name: 'manager_id',
+        choices: [
+          'Cardiologist',
+          'Neurologist',
+          'Radiologist',
+          'Pathologist',
+          'Pharmacist',
+          'Administrator',
+          'Manager',
+          'HR',
+          'Emergency Room Nurse',
+          'Home Care Registered Nurse',
+          'Surgical Registered Nurse',
+        ],
+      },
     ])
-    .then(function (answers) {
-      var firstName = answers.FirstName
-      var lastName = answers.LastName
-      var Title = answers.title
-      var manager = answers.manager
-
-      connection.query(
-        `SELECT id FROM roles WHERE title = "${answers.title}"`,
-        (err, Title) => {
-          const id = Title[0].id
-        },
-      )
-
-      connection.query(
-        `INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ("${firstName}", "${lastName}", "${Title}", "${manager}")`,
-
-        function (err, rows) {
-          if (err) throw err
-          console.table(rows)
-          showList()
-        },
-      )
+    .then(function (answer) {
+      connection.query('Select title, id from roles', function (err, results) {
+        if (err) throw err
+        console.log(results)
+        for (var i = 0; i < results.length; i++) {
+          console.log(
+            'we are comparing ',
+            results[i].title,
+            'to ',
+            answer.role_id,
+          )
+          if (results[i].title === answer.role_id) {
+            let role_id = results[i].id
+            connection.query(`SELECT title FROM roles`, (err, titles) => {
+              if (err) throw err
+              console.log(title)
+              roleOptions = title[0].title
+              console.log(roleOptions)
+            })
+            connection.query(
+              `SELECT first_name FROM employees`,
+              (err, manager) => {
+                if (err) throw err
+                console.log(manager)
+                managerOptions = manager[0].first_name
+                console.log(managerOptions)
+              },
+            )
+            connection.query(
+              `Insert into employee (first_name, last_name, role_id) values (?,?,?)`,
+              [answer.first_name, answer.last_name, role_id],
+              function (err, results) {
+                if (err) throw err
+                console.log(results.affectedRows + 'employee inserted!\n')
+                showList()
+              },
+            )
+          }
+        }
+      })
     })
 }
-
-let department_id = []
 
 function addRole() {
   connection.query(`SELECT title FROM roles`, (err, titles) => {
@@ -207,56 +222,62 @@ function addRole() {
         name: 'department_id',
       },
     ])
-    .then(function (answers) {
-      const title = answers.title
-      const salary = answers.salary
-      const department_id = answers.department_id
-      const query = `INSERT INTO roles SET ("title", "salary", "department_id") VALUES ("${title}", "${salary}", "${department_id}");`
-      connection.query(query, function (err, res) {
+    .then(function (answer) {
+      connection.query(
+        'insert into department (name) values (?)',
+        answer.department_id,
+        function (err, results) {
+          if (err) throw err
+          connection.query(
+            `select * from department where name= ? `,
+            answer.department_id,
+            function (err, res) {
+              let department_id = res[0].id
+              connection.query(
+                'insert into roles (title, salary, department_id) values (?, ?, ?)',
+                [answer.roleTitle, answer.salary, department_id],
+                function (err, results) {
+                  if (err) throw err
+                  console.table(results)
+                  showList()
+                },
+              )
+            },
+          )
+        },
+      )
+    })
+}
+
+function updateEmployee() {
+  inquirer
+    .prompt([
+      {
+        type: 'input',
+        message: "Enter the employee's ID you want to be updated",
+        name: 'updateEmploy',
+      },
+      {
+        type: 'input',
+        message: 'Enter the new role ID for that employee',
+        name: 'newRole',
+      },
+    ])
+    .then(function (res) {
+      const updateEmploy = res.updateEmploy
+      const newRole = res.newRole
+      const queryUpdate = `UPDATE employee SET role_id = "${newRole}" WHERE id = "${updateEmploy}"`
+      connection.query(queryUpdate, function (err, res) {
         if (err) {
           throw err
         }
         console.table(res)
+
         showList()
       })
     })
 }
 
-//var roleName = answers.roleName
-//var salary = answers.salary
-//var title = answers.title
-// var department_id = answers.department_id
-//console.log(salary)// console.log(depID)
-
-// connection.query(
-//`SELECT id FROM department_id WHERE department_id = "${answers.department_id}"`,
-// (err, department_id) => {
-//  const id = department_id[0].id
-
-//connection.query(
-// `INSERT INTO role (title, salary, department_id') VALUES ("${title}", "${salary}", "${department_id}")`,
-// function (err, res) {
-//  if (err) throw err
-// console.table(res)
-
-// showList()
-
-function updateEmployee() {
-  inquirer.prompt([
-    {
-      type: 'list',
-      message: 'For which employee would you like to update the role?',
-      name: 'role_id',
-    },
-    {
-      type: 'list',
-      message: "What is the employee's new role?",
-      name: 'titleID',
-      choices: showroles,
-    },
-  ])
-}
-// console.l
 function end() {
   connection.end()
   process.exit()
