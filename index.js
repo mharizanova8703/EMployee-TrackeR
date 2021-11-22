@@ -3,7 +3,6 @@ const inquirer = require('inquirer')
 const connection = require('./connection')
 const cTable = require('console.table')
 
-//const db = require('./db')
 showList()
 
 function showList() {
@@ -23,12 +22,10 @@ function showList() {
       message: 'Make your selection?',
       name: 'option',
     })
-    .then((response) => {
-      let userChoice = response.option
-      console.log(userChoice)
-      console.log('You entered:' + response.option)
+    .then(function (result) {
+      console.log('You entered: ' + result.option)
 
-      switch (userChoice) {
+      switch (result.option) {
         case 'View departments':
           showDepartments()
           break
@@ -84,32 +81,25 @@ function showEmployees() {
 
 function addDepartment() {
   inquirer
-    .prompt([
-      {
-        type: 'input',
-        message: 'What is the name of the department?',
-        name: 'department_name',
-      },
-    ])
-    .then((answer) => {
-      var department_name = answer.department_name
+    .prompt({
+      type: 'input',
+      message: 'What is the name of the department?',
+      name: 'department_name',
+    })
 
-      console.log(
-        `\n
-         ${department_name} into department table!\n`,
-      )
-
+    .then(function (answer) {
       connection.query(
-        `INSERT INTO departments (department_name) VALUES ("${department_name}")`,
-      ),
-        (err, res) => {
+        'INSERT INTO departments(department_name) VALUES (?)',
+        [answer.department_name],
+        function (err, res) {
           if (err) throw err
-          console.table(res)
-
-          showDepartments()
-        }
+          showList()
+        },
+      )
     })
 }
+
+showDepartments()
 
 let roleOptions = []
 let managerOptions = []
@@ -224,12 +214,13 @@ function addRole() {
     ])
     .then(function (answer) {
       connection.query(
-        'insert into department (name) values (?)',
+        'insert into department (department_name) values (?)',
         answer.department_id,
         function (err, results) {
           if (err) throw err
+          console.table(results)
           connection.query(
-            `select * from department where name= ? `,
+            `select * from department_id where name= ? `,
             answer.department_id,
             function (err, res) {
               let department_id = res[0].id
